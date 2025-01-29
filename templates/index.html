@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MRC</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import {
+      getAuth,
+      signOut,
+      onAuthStateChanged,
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9HzqdjcnNOfUIUFkkBNH1W8M3Dm1KMH8",
+      authDomain: "collegeproject-d31fe.firebaseapp.com",
+      projectId: "collegeproject-d31fe",
+      storageBucket: "collegeproject-d31fe.appspot.com",
+      messagingSenderId: "468747276569",
+      appId: "1:468747276569:web:9493310cf35618116db588",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Check if the user is logged in
+    onAuthStateChanged(auth, (user) => {
+      const loginButton = document.getElementById("loginButton");
+      const logoutButton = document.getElementById("logoutButton");
+
+      if (user) {
+        // User is logged in
+        loginButton.style.display = "none"; // Hide login button
+        logoutButton.style.display = "block"; // Show logout button
+      } else {
+        // User is not logged in
+        loginButton.style.display = "block"; // Show login button
+        logoutButton.style.display = "none"; // Hide logout button
+      }
+    });
+
+    document
+        .getElementById("logoutButton").addEventListener('click',()=>{
+      localStorage.removeItem('loggedInUserId');
+      signOut(auth)
+      .then(()=>{
+          window.location.href='/signin';
+      })
+      .catch((error)=>{
+          console.error('Error Signing out:', error);
+      })
+    })
+  </script>
+
+  <style>
+    body {
+      background-color: #f8f9fa; /* Light background for the whole page */
+      color: #212529; /* Dark text for readability */
+    }
+
+    .myimg {
+      width: 50px;
+      height: 50px;
+    }
+
+    /* Updated modal body text color */
+    .modal-body p,
+    .modal-body ul {
+      color: #212529; /* Ensure modal content is dark */
+    }
+
+    .navbar-light .navbar-brand,
+    .navbar-light .nav-link {
+      color: #343a40; /* Dark text color for navbar */
+    }
+
+    .navbar-light .nav-link.active {
+      color: #007bff; /* Highlight active page in navbar */
+    }
+
+    h1 {
+      color: #007bff; /* Header text in a blue shade */
+    }
+
+    .container {
+      background-color: #ffffff; /* White background for containers */
+      color: #212529; /* Dark text for better readability */
+      border-radius: 15px;
+      padding: 50px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Slight shadow for better definition */
+    }
+
+    input[type="text"] {
+      background-color: #f1f1f1; /* Light input background */
+      color: #212529; /* Dark text for inputs */
+      border: 1px solid #ced4da; /* Light border */
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007bff; /* Blue button color */
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3; /* Darker shade on hover */
+      transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .modal-header {
+      background-color: #f8f9fa;
+      color: #007bff;
+    }
+
+    .modal-header .btn-close {
+      color: #007bff; /* Change close button color to match theme */
+    }
+
+    .modal-content {
+      background-color: #ffffff; /* Modal background color */
+    }
+
+    .btn-warning {
+      background-color: #ffc107;
+      color: #212529;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      color: #fff;
+    }
+
+    .btn-info {
+      background-color: #17a2b8;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+    }
+  </style>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid" style="padding-left: 50px">
+        <a class="navbar-brand" href="#">MRC</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Items -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">Contact Us</a>
+            </li>
+          </ul>
+          <div class="d-flex">
+            <a id="loginButton" href="/signin" class="btn btn-outline-light"
+              >Login</a
+            >
+
+            <!-- Logout Button (Visible when user is logged in) -->
+            <a
+              type="logoutButton"
+              id="logoutButton"
+              href="javascript:void(0);"
+              class="btn btn-outline-light"
+              style="display: none"
+              >Logout</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <h1 class="text-center mt-4">Medicine Recommendation System</h1>
+
+    <!-- Form Section -->
+    <div class="container mt-4 d-flex justify-content-center">
+      <form action="/predict" method="post" class="w-50">
+        <div class="form-group">
+          <label for="symptoms">Enter your Symptoms</label>
+          <input
+            type="text"
+            class="form-control"
+            name="symptoms"
+            placeholder="use symptoms like itching, vomiting, coughing"
+            required
+          />
+        </div>
+        <br />
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-danger" style="padding: 14px">
+            Recommend
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- AI Powered Results Section -->
+    {% if predicted_disease %}
+    <h1 class="text-center mt-4">Our AI Powered Results</h1>
+    <div class="container text-center">
+      <div class="result-container">
+        <button
+          class="btn btn-warning"
+          data-bs-toggle="modal"
+          data-bs-target="#diseasemodel"
+        >
+          Disease
+        </button>
+        <button
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#descriptionmodel"
+        >
+          Description
+        </button>
+        <button
+          class="btn btn-info"
+          data-bs-toggle="modal"
+          data-bs-target="#precautionmodel"
+        >
+          Precaution
+        </button>
+        <button
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#medicationmodel"
+        >
+          Medication
+        </button>
+        <button
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#workoutmodel"
+        >
+          Workout
+        </button>
+        <button
+          class="btn btn-secondary"
+          data-bs-toggle="modal"
+          data-bs-target="#dietmodel"
+        >
+          Diet
+        </button>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal for Disease -->
+    <div
+      class="modal"
+      id="diseasemodel"
+      tabindex="-1"
+      aria-labelledby="diseasemodelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="diseasemodelLabel">
+              Predicted Disease
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>{{ predicted_disease }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Description -->
+    <div
+      class="modal"
+      id="descriptionmodel"
+      tabindex="-1"
+      aria-labelledby="descriptionmodelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="descriptionmodelLabel">
+              Disease Description
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>{{ desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Precautions -->
+    <div
+      class="modal"
+      id="precautionmodel"
+      tabindex="-1"
+      aria-labelledby="precautionmodelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="precautionmodelLabel">Precautions</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for item in pre %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Medication -->
+    <div
+      class="modal"
+      id="medicationmodel"
+      tabindex="-1"
+      aria-labelledby="medicationmodelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="medicationmodelLabel">Medications</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for item in med %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Workout -->
+    <div
+      class="modal"
+      id="workoutmodel"
+      tabindex="-1"
+      aria-labelledby="workoutmodelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="workoutmodelLabel">Workouts</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for item in workt %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Diet -->
+    <div
+      class="modal"
+      id="dietmodel"
+      tabindex="-1"
+      aria-labelledby="dietmodelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="dietmodelLabel">Diet</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for item in die %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
